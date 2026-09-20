@@ -234,7 +234,7 @@
     ]));
 
     /* phone */
-    var phoneIn = UI.input('send_phone', { type: 'tel', value: r.phone || '', placeholder: '(718) 555-0142', autocomplete: 'tel' });
+    var phoneIn = UI.input('send_phone', { type: 'tel', value: r.phone || '', placeholder: '(305) 555-0142', autocomplete: 'tel' });
     var smsBtn = UI.button('Send by text', {
       variant: 'primary', icon: 'receipt',
       onClick: function () {

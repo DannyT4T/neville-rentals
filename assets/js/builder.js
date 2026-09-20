@@ -123,7 +123,7 @@
     f.license = UI.input('r_lic', { placeholder: 'W412-8873-2201-90', class: 'input--mono', autocomplete: 'off' });
     f.licState = UI.input('r_licstate', { value: 'FL', maxlength: 2, class: 'input--mono' });
     f.licExp = UI.input('r_licexp', { type: 'date' });
-    f.phone = UI.input('r_phone', { type: 'tel', placeholder: '(718) 555-0142', autocomplete: 'tel' });
+    f.phone = UI.input('r_phone', { type: 'tel', placeholder: '(305) 555-0142', autocomplete: 'tel' });
     f.email = UI.input('r_email', { type: 'email', placeholder: 'renter@example.com', autocomplete: 'email' });
     f.address = U.el('textarea', { id: 'r_addr', placeholder: 'Street, city, state, ZIP', rows: 2 });
 
