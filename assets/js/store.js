@@ -180,6 +180,24 @@
     };
   };
 
+  /* The demo fleet shipped with LRT- plates before the rebrand. A browser that
+     carried its data across the rename keeps them, so bring the placeholders
+     into line. Only the seeded vehicles are touched — anything the owner typed
+     is left exactly as entered. */
+  var SEEDED_VEHICLES = {
+    v_bmw330: 1, v_tahoe: 1, v_camry: 1, v_grandch: 1, v_altima: 1, v_odyssey: 1
+  };
+  function migrateSeedPlates() {
+    var changed = false;
+    db.vehicles.forEach(function (v) {
+      if (SEEDED_VEHICLES[v.id] && /^LRT-/.test(v.plate || '')) {
+        v.plate = v.plate.replace(/^LRT-/, 'NRT-');
+        changed = true;
+      }
+    });
+    return changed;
+  }
+
   S.init = function () {
     db = read();
     if (!db || !db.vehicles || !db.contracts) {
@@ -188,6 +206,7 @@
       write();
     }
     if (!db.company) db.company = S.defaultCompany();
+    if (migrateSeedPlates()) write();
     S.syncVehicleStatus();
     return db;
   };

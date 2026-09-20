@@ -193,8 +193,20 @@
   .doc-shell { gap: 0; }
   .sheet {
     border: 0; box-shadow: none; padding: 0; max-width: none;
-    font-size: 10.5pt; line-height: 1.38;
+    font-size: 9.8pt; line-height: 1.34;
   }
+  /* Tightened for paper: the fifteen clauses are the bulk of the document. */
+  .art { margin-bottom: 11px; }
+  .art__h { margin-bottom: 7px; }
+  .clause { font-size: 8.8pt; line-height: 1.36; margin-bottom: 5px; }
+  .clause--key { padding: 6px 8px; }
+  .dl { gap: 7px 18px; }
+  .sheet__title { margin: 11px 0 14px; }
+  .ack { margin-top: 9px; gap: 5px; }
+  .ack__i { font-size: 8.8pt; }
+  .signs { margin-top: 6px; gap: 18px; }
+  .sign__ink { min-height: 46px; }
+  .dmgdoc canvas { max-height: 2.6in; object-fit: contain; }
   .art { page-break-inside: avoid; }
   .signs, .clause, .cond__box { page-break-inside: avoid; }
   .art--terms { page-break-before: auto; }

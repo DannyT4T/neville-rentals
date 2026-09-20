@@ -314,7 +314,7 @@
     sheet.appendChild(U.el('div', { class: 'sheet__foot' }, [
       U.el('span', { text: co.name }),
       U.el('span', { text: 'Agreement ' + (c.no || '—') }),
-      U.el('span', { text: 'Page 1 of 1' })
+      U.el('span', { text: c.signedAt ? 'Executed ' + U.fmtDate(c.signedAt) : 'Unsigned' })
     ]));
 
     return sheet;

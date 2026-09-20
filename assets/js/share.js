@@ -207,6 +207,7 @@
   /* ------------------------------------------------------------ the sheet */
 
   Sh.open = function (c) {
+    var sheet = null;   // the modal handle, so Print can close it first
     var co = S.company();
     var r = c.renter || {};
     var kind = Sh.deviceKind();
@@ -297,7 +298,10 @@
     }));
     more.appendChild(UI.button('Print / save PDF', {
       icon: 'printer',
-      onClick: function () { root.NRT.app.printContract(c.id); }
+      onClick: function () {
+        if (sheet) sheet.close();
+        root.NRT.app.printContract(c.id);
+      }
     }));
     body.appendChild(U.el('div', { class: 'field' }, [
       U.el('span', { class: 'label', text: 'Other ways out' }), more
@@ -317,7 +321,7 @@
       U.el('span', { class: 'label', text: 'Preview' }), pre
     ]));
 
-    UI.modal({ title: 'Send agreement ' + (c.no || ''), body: body, actions: [{ label: 'Done' }] });
+    sheet = UI.modal({ title: 'Send agreement ' + (c.no || ''), body: body, actions: [{ label: 'Done' }] });
   };
 
   function markSent(c, how, target) {

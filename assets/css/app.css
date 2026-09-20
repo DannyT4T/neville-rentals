@@ -816,8 +816,11 @@ input[type="range"]::-moz-range-thumb {
 .kv dd { margin: 0; font-weight: 500; }
 
 @media print {
-  .rail, .tabbar, .appbar, .summary, .toast-host, .no-print { display: none !important; }
+  .rail, .tabbar, .appbar, .summary, .toast-host, .no-print,
+  .modal, .modal__panel { display: none !important; }
   .main { margin: 0; padding: 0; }
   .wrap { max-width: none; padding: 0; }
-  body { background: #fff; }
+  /* UI.modal locks body scrolling while it is open; printing must not inherit
+     that, or the sheet gets clipped to one viewport. */
+  html, body { background: #fff; overflow: visible !important; height: auto !important; }
 }
