@@ -74,7 +74,10 @@ on the increment grid the business uses — **$25 a day, $50 a week** — via th
 slider or the ± buttons, with a typed field for anything off-grid.
 
 **Insurance.** Company coverage is billed per day for the whole term. Choosing
-self-insurance opens a required panel: insurance company, policy number, a file
+self-insurance **waives that per-day fee entirely** — the charge drops off the
+ledger, the due-at-signing total falls by it, and the contract prints the line
+as waived rather than omitting it. Choosing self-insurance also opens a required
+panel: insurance company, policy number, a file
 attachment for the declarations page, and an agent confirmation that a valid
 policy was seen. None of it can be skipped, and an extra acknowledgement is
 added to the contract.
@@ -162,6 +165,20 @@ app changes — every other module goes through the `NRT.store` API.
 
 ---
 
+## Tests
+
+The money rules have a regression test — the insurance waiver and the
+weekly/daily split are easy to break by accident:
+
+```
+node tests/totals.test.js
+```
+
+It loads the real `store.js` under Node with a stubbed `localStorage` and
+asserts against actual totals, so it fails if the arithmetic drifts.
+
+---
+
 ## Project layout
 
 ```
@@ -178,6 +195,7 @@ assets/js/share.js         text / email / share-sheet handoff
 assets/js/views.js         dashboard, fleet, contract list, check-in
 assets/js/builder.js       the contract form
 assets/js/app.js           hash router, shell wiring, settings
+tests/totals.test.js       money rules: insurance waiver, weekly/daily split
 ```
 
 Plain ES5-style scripts on purpose — no modules, no bundler — so the app also

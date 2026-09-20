@@ -211,7 +211,7 @@
     if (c.insurance && c.insurance.type === 'company') {
       line('Insurance, provided by owner', U.money(c.insurance.dailyFee), t.days + ' d', U.money(t.insurance));
     } else {
-      line('Insurance, self-insured by renter', '—', '—', U.money(0));
+      line('Insurance — waived, renter self-insured', 'no daily fee', '—', U.money(0));
     }
     (c.fees || []).forEach(function (f) {
       line(f.label || 'Additional charge', '—', '—', U.money(f.amount));

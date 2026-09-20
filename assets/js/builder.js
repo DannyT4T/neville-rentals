@@ -246,7 +246,8 @@
       U.el('div', { class: 'choice__title', text: 'Renter is self-insured' }),
       U.el('div', { class: 'choice__note', text: 'Requires a current policy covering this vehicle before keys are released.' })
     ]));
-    insSelf.appendChild(U.el('span', { class: 'choice__price', text: 'No daily fee' }));
+    var insSelfPrice = U.el('span', { class: 'choice__price', text: 'No daily fee' });
+    insSelf.appendChild(insSelfPrice);
 
     var selfPanel = U.el('div', { class: 'stack', hidden: true });
     var provIn = UI.input('ins_provider', { placeholder: 'GEICO, Progressive, State Farm' });
@@ -289,6 +290,10 @@
 
     function setInsurance(type) {
       draft.insurance.type = type;
+      /* The per-day fee is ours to charge only when we carry the coverage.
+         Zero it on the record as well as in the total, so a self-insured
+         contract cannot read back as though a fee were owed. */
+      draft.insurance.dailyFee = type === 'company' ? co.insuranceDaily : 0;
       insCompany.classList.toggle('is-on', type === 'company');
       insSelf.classList.toggle('is-on', type === 'self');
       selfPanel.hidden = type !== 'self';
@@ -473,6 +478,7 @@
       }
 
       insPrice.textContent = U.money(co.insuranceDaily) + '/day · ' + U.money(co.insuranceDaily * t.days);
+      insSelfPrice.textContent = 'No daily fee · saves ' + U.money(co.insuranceDaily * t.days);
 
       /* ledger */
       ledger.innerHTML = '';
@@ -489,8 +495,12 @@
       } else {
         row('Rental, daily', U.money(t.rental), U.money(draft.dailyRate) + ' × ' + t.days + ' day' + (t.days === 1 ? '' : 's'));
       }
-      row('Insurance', U.money(t.insurance),
-        draft.insurance.type === 'company' ? U.money(co.insuranceDaily) + ' × ' + t.days + ' days' : 'Renter is self-insured');
+      if (draft.insurance.type === 'company') {
+        row('Insurance', U.money(t.insurance), U.money(co.insuranceDaily) + ' × ' + t.days + ' days');
+      } else {
+        row('Insurance — waived', U.money(0),
+          U.money(co.insuranceDaily) + '/day not charged · renter is self-insured');
+      }
       (draft.fees || []).forEach(function (fee) {
         if (U.num(fee.amount)) row(fee.label || 'Additional charge', U.money(fee.amount));
       });
