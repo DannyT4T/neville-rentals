@@ -9,8 +9,15 @@
 
   var U = root.NRT.util;
 
+  /* The clause text quotes real figures, so a contract handed in without
+     totals gets them computed rather than throwing. */
+  function totalsOf(c) {
+    if (c.totals) return c.totals;
+    return (root.NRT.store && root.NRT.store.totals) ? root.NRT.store.totals(c) : {};
+  }
+
   function clauses(c, co, veh) {
-    var t = c.totals;
+    var t = totalsOf(c);
     var deposit = U.money(t.deposit);
     var interval = co.inspectionIntervalDays || 30;
     var vehName = veh ? (veh.year + ' ' + veh.make + ' ' + veh.model) : 'the Vehicle';
@@ -138,7 +145,7 @@
   }
 
   function acknowledgements(c, co) {
-    var t = c.totals;
+    var t = totalsOf(c);
     var acks = [
       { id: 'ack_terms', text: 'I have read and agree to all articles of this rental agreement.' },
       { id: 'ack_tolls', text: 'I understand that tolls incurred during this rental are deducted from my ' +

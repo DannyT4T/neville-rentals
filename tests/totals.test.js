@@ -12,7 +12,7 @@ global.localStorage = {
 };
 global.window = global;
 
-for (const f of ['util.js', 'store.js']) {
+for (const f of ['util.js', 'store.js', 'terms.js']) {
   // eslint-disable-next-line no-eval
   eval(fs.readFileSync(path.join(ROOT, f), 'utf8'));
 }
@@ -54,6 +54,22 @@ const self2 = probe('Self-insured (dailyFee 0)', { type: 'self', dailyFee: 0 });
 console.log('\n--- 10-day rental, automatic billing ---');
 const split = probe('1 week + 3 days', { type: 'company', dailyFee: 15 }, '2026-10-01', '2026-10-11');
 
+// The clause text and acknowledgements quote live figures. A contract handed
+// in without .totals used to throw here, which made Sign & generate do nothing.
+console.log('\n--- clauses on a contract with no .totals ---');
+const T = global.NRT.terms;
+const bare = {
+  vehicleId: 'v_camry', startDate: '2026-10-01', endDate: '2026-10-08',
+  rateMode: 'weekly', dailyRate: 75, weeklyRate: 400,
+  insurance: { type: 'company', dailyFee: 15 }, deposit: 150, tolls: [], fees: []
+};
+let clauseCount = 0, ackCount = 0, threw = null;
+try {
+  clauseCount = T.clauses(bare, S.company(), S.vehicle('v_camry')).length;
+  ackCount = T.acknowledgements(bare, S.company()).length;
+} catch (e) { threw = e.message; }
+console.log('  clauses=' + clauseCount + ' acknowledgements=' + ackCount + ' threw=' + threw);
+
 console.log('\n--- assertions ---');
 const checks = [
   ['company insurance charges 7 x $15 = $105', company.insurance === 105],
@@ -65,7 +81,10 @@ const checks = [
   ['a 7-day term bills as exactly one week', company.weeks === 1 && company.extraDays === 0],
   ['a 7-day term uses the weekly rate, not 7 x daily', company.rental === 850],
   ['a 10-day term splits into 1 week + 3 days', split.weeks === 1 && split.extraDays === 3],
-  ['that split bills $850 + 3 x $150 = $1,300', split.rental === 850 + 3 * 150]
+  ['that split bills $850 + 3 x $150 = $1,300', split.rental === 850 + 3 * 150],
+  ['clauses render without .totals (no throw)', threw === null],
+  ['all fifteen clauses are produced', clauseCount === 15],
+  ['acknowledgements are produced', ackCount >= 4]
 ];
 let bad = 0;
 for (const [name, ok] of checks) {

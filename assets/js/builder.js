@@ -447,14 +447,18 @@
 
     /* ------------------------------------------------------------- recalc */
 
+    /* Everything downstream — the clause text, the acknowledgements and the
+       validation in submit() — reads c.totals, so it is attached here once
+       rather than by each caller. Leaving it off threw inside submit(). */
     function currentContract() {
-      return Object.assign({}, draft, { rateMode: draft.rateMode === 'auto' ? 'weekly' : draft.rateMode });
+      var c = Object.assign({}, draft, { rateMode: draft.rateMode === 'auto' ? 'weekly' : draft.rateMode });
+      c.totals = S.totals(c);
+      return c;
     }
 
     function recalc() {
       var c = currentContract();
-      var t = S.totals(c);
-      c.totals = t;
+      var t = c.totals;
 
       /* duration readout */
       durationEl.innerHTML = '';
@@ -547,6 +551,15 @@
     /* ------------------------------------------------------------- submit */
 
     function submit() {
+      try {
+        doSubmit();
+      } catch (err) {
+        if (window.console && console.error) console.error(err);
+        U.toast('Could not generate the contract: ' + ((err && err.message) || err), 'bad');
+      }
+    }
+
+    function doSubmit() {
       var problems = [];
       if (!draft.vehicleId) problems.push('Pick a vehicle.');
       if (!draft.renter.name.trim()) { problems.push('Enter the renter’s name.'); nameField.setError('Required.'); }
