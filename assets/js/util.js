@@ -1,4 +1,4 @@
-/* Leville Rentals & Transportation — shared helpers */
+/* Neville Rentals & Transportation — shared helpers */
 (function (root) {
   'use strict';
 
@@ -125,6 +125,6 @@
     return f ? f.short : '—';
   };
 
-  root.LRT = root.LRT || {};
-  root.LRT.util = U;
+  root.NRT = root.NRT || {};
+  root.NRT.util = U;
 })(window);

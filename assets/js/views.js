@@ -1,12 +1,12 @@
-/* Leville Rentals & Transportation — dashboard, fleet, contract list and
+/* Neville Rentals & Transportation — dashboard, fleet, contract list and
    the check-in flow. */
 (function (root) {
   'use strict';
 
-  var U = root.LRT.util;
-  var S = root.LRT.store;
-  var UI = root.LRT.ui;
-  var CV = root.LRT.canvas;
+  var U = root.NRT.util;
+  var S = root.NRT.store;
+  var UI = root.NRT.ui;
+  var CV = root.NRT.canvas;
   var V = {};
 
   function head(eyebrow, title, actions) {
@@ -330,7 +330,7 @@
           confirmLabel: 'Remove vehicle', danger: true
         }).then(function (ok) {
           if (!ok) return;
-          if (S.deleteVehicle(v.id)) { U.toast('Vehicle removed.'); root.LRT.app.render(); }
+          if (S.deleteVehicle(v.id)) { U.toast('Vehicle removed.'); root.NRT.app.render(); }
           else U.toast('That vehicle is on an active rental — close the contract first.', 'bad');
         });
       }
@@ -341,7 +341,7 @@
 
   V.vehicleForm = function (v) {
     var isNew = !v;
-    v = v || { klass: 'standard', state: 'NY', status: 'available', seats: 5, dailyRate: 75, weeklyRate: 400 };
+    v = v || { klass: 'standard', state: 'FL', status: 'available', seats: 5, dailyRate: 75, weeklyRate: 400 };
     var body = U.el('div', { class: 'stack' });
 
     var f = {};
@@ -351,8 +351,8 @@
     f.trim = UI.input('v_trim', { value: v.trim || '', placeholder: 'Sedan' });
     f.color = UI.input('v_color', { value: v.color || '', placeholder: 'Alpine White' });
     f.vin = UI.input('v_vin', { value: v.vin || '', placeholder: 'WBA5R7C51MFH12384', maxlength: 17, class: 'input--mono' });
-    f.plate = UI.input('v_plate', { value: v.plate || '', placeholder: 'LRT-4471', class: 'input--mono' });
-    f.state = UI.input('v_state', { value: v.state || 'NY', maxlength: 2, class: 'input--mono' });
+    f.plate = UI.input('v_plate', { value: v.plate || '', placeholder: 'NRT-4471', class: 'input--mono' });
+    f.state = UI.input('v_state', { value: v.state || 'FL', maxlength: 2, class: 'input--mono' });
     f.seats = UI.input('v_seats', { type: 'number', min: 1, max: 20, value: v.seats || 5 });
     f.odometer = UI.input('v_odo', { type: 'number', min: 0, value: v.odometer || 0 });
     f.daily = UI.input('v_daily', { type: 'number', min: 0, step: 5, value: v.dailyRate || 75 });
@@ -421,7 +421,7 @@
               dailyRate: U.num(f.daily.value, 75), weeklyRate: U.num(f.weekly.value, 400)
             });
             U.toast(isNew ? 'Vehicle added to the fleet.' : 'Vehicle updated.', 'good');
-            root.LRT.app.render();
+            root.NRT.app.render();
           }
         }
       ]
@@ -517,7 +517,7 @@
 
     bar.appendChild(UI.button('Send', {
       variant: 'primary', size: 'sm', icon: 'upload',
-      onClick: function () { root.LRT.share.open(c); }
+      onClick: function () { root.NRT.share.open(c); }
     }));
     bar.appendChild(UI.button('Print', {
       size: 'sm', icon: 'printer', onClick: function () { window.print(); }
@@ -554,7 +554,7 @@
       shell.lastChild.classList.add('no-print');
     }
 
-    shell.appendChild(root.LRT.doc.render(c));
+    shell.appendChild(root.NRT.doc.render(c));
     mount.appendChild(shell);
   };
 
@@ -721,7 +721,7 @@
             if (veh.id && state.odometer) S.saveVehicle({ id: veh.id, odometer: state.odometer });
             S.saveContract(c);
             U.toast('Rental closed. ' + U.money(c.totals.depositRefund) + ' back to the renter.', 'good');
-            root.LRT.app.render();
+            root.NRT.app.render();
           }
         }
       ]
@@ -736,5 +736,5 @@
     });
   };
 
-  root.LRT.views = V;
+  root.NRT.views = V;
 })(window);

@@ -1,13 +1,13 @@
-/* Leville Rentals & Transportation — the contract document.
+/* Neville Rentals & Transportation — the contract document.
    Renders a signed (or in-progress) rental agreement as a classic black-ink
    sheet that prints on US Letter without further styling. */
 (function (root) {
   'use strict';
 
-  var U = root.LRT.util;
-  var S = root.LRT.store;
-  var CV = root.LRT.canvas;
-  var T = root.LRT.terms;
+  var U = root.NRT.util;
+  var S = root.NRT.store;
+  var CV = root.NRT.canvas;
+  var T = root.NRT.terms;
 
   var D = {};
 
@@ -320,5 +320,5 @@
     return sheet;
   };
 
-  root.LRT.doc = D;
+  root.NRT.doc = D;
 })(window);

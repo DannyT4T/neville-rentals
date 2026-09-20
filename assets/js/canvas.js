@@ -1,11 +1,11 @@
-/* Leville Rentals & Transportation — canvas components.
+/* Neville Rentals & Transportation — canvas components.
    Damage marks and signatures are stored as vector strokes in a fixed logical
    coordinate space, never as a flattened image, so the same record re-renders
    crisply on a phone, on the printed contract, and at any zoom. */
 (function (root) {
   'use strict';
 
-  var U = root.LRT.util;
+  var U = root.NRT.util;
   var C = {};
 
   /* Logical drawing spaces. */
@@ -508,5 +508,5 @@
     return wrap;
   };
 
-  root.LRT.canvas = C;
+  root.NRT.canvas = C;
 })(window);

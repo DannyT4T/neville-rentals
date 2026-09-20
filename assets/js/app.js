@@ -1,12 +1,12 @@
-/* Leville Rentals & Transportation — router, shell wiring, settings. */
+/* Neville Rentals & Transportation — router, shell wiring, settings. */
 (function (root) {
   'use strict';
 
-  var U = root.LRT.util;
-  var S = root.LRT.store;
-  var UI = root.LRT.ui;
-  var V = root.LRT.views;
-  var B = root.LRT.builder;
+  var U = root.NRT.util;
+  var S = root.NRT.store;
+  var UI = root.NRT.ui;
+  var V = root.NRT.views;
+  var B = root.NRT.builder;
 
   var App = {};
   var mount, titleEl;
@@ -38,15 +38,17 @@
 
   /* ---------------------------------------------------------------- theme */
 
-  var THEME_KEY = 'lrt.theme';
+  var THEME_KEY = 'nrt.theme';
   function readTheme() {
-    try { return localStorage.getItem(THEME_KEY) || 'system'; } catch (e) { return 'system'; }
+    try {
+      return localStorage.getItem(THEME_KEY) || localStorage.getItem('lrt.theme') || 'system';
+    } catch (e) { return 'system'; }
   }
   function applyTheme(t) {
     if (t === 'system') document.documentElement.removeAttribute('data-theme');
     else document.documentElement.setAttribute('data-theme', t);
     try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
-    if (root.LRT.canvas) root.LRT.canvas.refreshTheme();
+    if (root.NRT.canvas) root.NRT.canvas.refreshTheme();
   }
   App.cycleTheme = function () {
     var order = ['system', 'light', 'dark'];
@@ -109,7 +111,7 @@
       b.classList.toggle('is-on', b.dataset.route === routeId);
     });
     var r = ROUTES.filter(function (x) { return x.id === routeId; })[0];
-    titleEl.textContent = r ? r.title : 'Leville Rentals';
+    titleEl.textContent = r ? r.title : 'Neville Rentals';
   }
 
   /* -------------------------------------------------------------- settings */
@@ -274,7 +276,7 @@
 
   function exportBackup() {
     var text = S.exportJSON();
-    var name = 'leville-backup-' + U.today() + '.json';
+    var name = 'neville-backup-' + U.today() + '.json';
     try {
       var blob = new Blob([text], { type: 'application/json' });
       var url = URL.createObjectURL(blob);
@@ -285,7 +287,7 @@
       setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
       U.toast('Backup saved as ' + name, 'good');
     } catch (e) {
-      root.LRT.share.copy(text);
+      root.NRT.share.copy(text);
       U.toast('Download blocked here — the backup was copied to your clipboard instead.');
     }
   }
@@ -335,14 +337,14 @@
     window.addEventListener('hashchange', App.render);
     if (window.matchMedia) {
       var mq = window.matchMedia('(prefers-color-scheme: dark)');
-      var onScheme = function () { if (root.LRT.canvas) root.LRT.canvas.refreshTheme(); App.render(); };
+      var onScheme = function () { if (root.NRT.canvas) root.NRT.canvas.refreshTheme(); App.render(); };
       if (mq.addEventListener) mq.addEventListener('change', onScheme);
     }
 
     App.render();
   };
 
-  root.LRT.app = App;
+  root.NRT.app = App;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', App.start);

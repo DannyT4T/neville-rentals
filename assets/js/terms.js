@@ -1,4 +1,4 @@
-/* Leville Rentals & Transportation — the agreement's terms.
+/* Neville Rentals & Transportation — the agreement's terms.
 
    Built from the live contract so the printed clauses state this rental's
    actual deposit, insurance fee, dates and inspection schedule rather than
@@ -7,7 +7,7 @@
 (function (root) {
   'use strict';
 
-  var U = root.LRT.util;
+  var U = root.NRT.util;
 
   function clauses(c, co, veh) {
     var t = c.totals;
@@ -33,7 +33,7 @@
     list.push({
       key: true,
       title: 'Tolls',
-      text: 'The Renter is responsible for every toll, congestion charge and electronic toll-by-mail invoice incurred while the Vehicle is in the Renter’s possession, together with any administrative fee assessed by the tolling authority. ' +
+      text: 'The Renter is responsible for every toll, SunPass charge and toll-by-plate invoice incurred while the Vehicle is in the Renter’s possession, together with any administrative fee assessed by the tolling authority. ' +
         'Toll charges received by ' + co.name + ' are itemized at check-in and deducted from the security deposit. ' +
         'Toll invoices that arrive after the deposit has been settled remain the Renter’s obligation and are payable within 10 days of notice.'
     });
@@ -92,8 +92,9 @@
 
     list.push({
       title: 'Mileage and territory',
-      text: 'Mileage is unlimited within New York, New Jersey, Connecticut and Pennsylvania. ' +
-        'Operation outside those states requires prior written consent. The Vehicle may not leave the continental United States.'
+      text: 'Mileage is unlimited within the State of Florida. ' +
+        'Operation outside Florida requires prior written consent from ' + co.name + '. ' +
+        'The Vehicle may not be taken outside the continental United States, and may not be carried by ferry or barge to any island not reachable by highway.'
     });
 
     list.push({
@@ -130,7 +131,7 @@
     list.push({
       title: 'Entire agreement; governing law',
       text: 'This document is the entire agreement between the parties and supersedes any prior understanding. ' +
-        'No change is binding unless made in writing and signed by both parties. This agreement is governed by the laws of the State of New York.'
+        'No change is binding unless made in writing and signed by both parties. This agreement is governed by the laws of the State of Florida, and any action arising from it shall be brought in Miami-Dade County.'
     });
 
     return list;
@@ -156,5 +157,5 @@
     return acks;
   }
 
-  root.LRT.terms = { clauses: clauses, acknowledgements: acknowledgements };
+  root.NRT.terms = { clauses: clauses, acknowledgements: acknowledgements };
 })(window);

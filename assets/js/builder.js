@@ -1,14 +1,14 @@
-/* Leville Rentals & Transportation — the contract builder.
+/* Neville Rentals & Transportation — the contract builder.
    One long form rather than a wizard: at a rental counter you jump around,
    and a running total stays pinned at the bottom the whole time. */
 (function (root) {
   'use strict';
 
-  var U = root.LRT.util;
-  var S = root.LRT.store;
-  var UI = root.LRT.ui;
-  var CV = root.LRT.canvas;
-  var T = root.LRT.terms;
+  var U = root.NRT.util;
+  var S = root.NRT.store;
+  var UI = root.NRT.ui;
+  var CV = root.NRT.canvas;
+  var T = root.NRT.terms;
 
   var B = {};
 
@@ -37,7 +37,7 @@
 
     var draft = {
       vehicleId: null,
-      renter: { name: '', dob: '', license: '', licState: 'NY', licExp: '', phone: '', email: '', address: '' },
+      renter: { name: '', dob: '', license: '', licState: 'FL', licExp: '', phone: '', email: '', address: '' },
       startDate: U.today(),
       endDate: U.addDays(U.today(), 7),
       rateMode: 'auto',
@@ -121,7 +121,7 @@
     f.name = UI.input('r_name', { placeholder: 'As printed on the license', autocomplete: 'name' });
     f.dob = UI.input('r_dob', { type: 'date', max: U.today() });
     f.license = UI.input('r_lic', { placeholder: 'W412-8873-2201-90', class: 'input--mono', autocomplete: 'off' });
-    f.licState = UI.input('r_licstate', { value: 'NY', maxlength: 2, class: 'input--mono' });
+    f.licState = UI.input('r_licstate', { value: 'FL', maxlength: 2, class: 'input--mono' });
     f.licExp = UI.input('r_licexp', { type: 'date' });
     f.phone = UI.input('r_phone', { type: 'tel', placeholder: '(718) 555-0142', autocomplete: 'tel' });
     f.email = UI.input('r_email', { type: 'email', placeholder: 'renter@example.com', autocomplete: 'email' });
@@ -599,9 +599,9 @@
         'The vehicle is marked as out. Send the renter their copy now, or print it for the file.', 'check'));
       var actions = U.el('div', { class: 'inline' }, [
         UI.button('Send to renter', { variant: 'primary', icon: 'upload', onClick: function () {
-          root.LRT.share.open(saved);
+          root.NRT.share.open(saved);
         } }),
-        UI.button('Print', { icon: 'printer', onClick: function () { root.LRT.app.printContract(saved.id); } }),
+        UI.button('Print', { icon: 'printer', onClick: function () { root.NRT.app.printContract(saved.id); } }),
         UI.button('Open the contract', { icon: 'files', onClick: function () { location.hash = '#/contract/' + saved.id; } })
       ]);
       body.appendChild(actions);
@@ -648,5 +648,5 @@
     });
   };
 
-  root.LRT.builder = B;
+  root.NRT.builder = B;
 })(window);

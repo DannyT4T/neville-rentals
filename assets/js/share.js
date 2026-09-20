@@ -1,4 +1,4 @@
-/* Leville Rentals & Transportation — sending a finished contract out.
+/* Neville Rentals & Transportation — sending a finished contract out.
 
    There is no mail server behind this app, so sending hands off to whatever
    the device already has: the native share sheet, the Messages app, the mail
@@ -9,10 +9,10 @@
 (function (root) {
   'use strict';
 
-  var U = root.LRT.util;
-  var S = root.LRT.store;
-  var UI = root.LRT.ui;
-  var T = root.LRT.terms;
+  var U = root.NRT.util;
+  var S = root.NRT.store;
+  var UI = root.NRT.ui;
+  var T = root.NRT.terms;
 
   var Sh = {};
 
@@ -297,7 +297,7 @@
     }));
     more.appendChild(UI.button('Print / save PDF', {
       icon: 'printer',
-      onClick: function () { root.LRT.app.printContract(c.id); }
+      onClick: function () { root.NRT.app.printContract(c.id); }
     }));
     body.appendChild(U.el('div', { class: 'field' }, [
       U.el('span', { class: 'label', text: 'Other ways out' }), more
@@ -327,5 +327,5 @@
     U.toast('Handed off to your ' + (how === 'text' ? 'Messages' : how === 'email' ? 'Mail' : 'share') + ' app.', 'good');
   }
 
-  root.LRT.share = Sh;
+  root.NRT.share = Sh;
 })(window);

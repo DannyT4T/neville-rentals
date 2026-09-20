@@ -1,17 +1,26 @@
-/* Leville Rentals & Transportation — persistence layer.
+/* Neville Rentals & Transportation — persistence layer.
    Storage sits behind this one module on purpose: swap read()/write() for a
    server call and nothing else in the app has to change. */
 (function (root) {
   'use strict';
 
-  var U = root.LRT.util;
-  var KEY = 'lrt.db.v2';
+  var U = root.NRT.util;
+  var KEY = 'nrt.db.v2';
+  var LEGACY_KEY = 'lrt.db.v2';   // pre-rename key; carried over once on first read
   var db = null;
   var listeners = [];
 
   function read() {
     try {
       var raw = localStorage.getItem(KEY);
+      if (!raw) {
+        var legacy = localStorage.getItem(LEGACY_KEY);
+        if (legacy) {
+          localStorage.setItem(KEY, legacy);
+          localStorage.removeItem(LEGACY_KEY);
+          raw = legacy;
+        }
+      }
       return raw ? JSON.parse(raw) : null;
     } catch (e) { return null; }
   }
@@ -27,24 +36,24 @@
   function seedFleet() {
     return [
       { id: 'v_bmw330', year: 2021, make: 'BMW', model: '330i xDrive', trim: 'Sedan', klass: 'luxury',
-        color: 'Alpine White', vin: 'WBA5R7C51MFH12384', plate: 'LRT-4471', state: 'NY',
+        color: 'Alpine White', vin: 'WBA5R7C51MFH12384', plate: 'NRT-4471', state: 'FL',
         seats: 5, dailyRate: 100, weeklyRate: 550, odometer: 48210, status: 'available',
         notes: 'Premium package. Takes 91 octane.' },
       { id: 'v_tahoe', year: 2022, make: 'Chevrolet', model: 'Tahoe LT', trim: 'Full-size SUV', klass: 'suv',
-        color: 'Black', vin: '1GNSKNKD4NR203918', plate: 'LRT-8802', state: 'NY',
+        color: 'Black', vin: '1GNSKNKD4NR203918', plate: 'NRT-8802', state: 'FL',
         seats: 8, dailyRate: 150, weeklyRate: 850, odometer: 61455, status: 'available',
         notes: 'Third row. Tow package installed.' },
       { id: 'v_camry', year: 2020, make: 'Toyota', model: 'Camry SE', trim: 'Sedan', klass: 'standard',
-        color: 'Celestial Silver', vin: '4T1G11AK2LU907712', plate: 'LRT-2219', state: 'NY',
+        color: 'Celestial Silver', vin: '4T1G11AK2LU907712', plate: 'NRT-2219', state: 'FL',
         seats: 5, dailyRate: 75, weeklyRate: 400, odometer: 88940, status: 'available', notes: '' },
       { id: 'v_grandch', year: 2021, make: 'Jeep', model: 'Grand Cherokee', trim: 'Mid-size SUV', klass: 'suv',
-        color: 'Granite Crystal', vin: '1C4RJFBG7MC804455', plate: 'LRT-6130', state: 'NY',
+        color: 'Granite Crystal', vin: '1C4RJFBG7MC804455', plate: 'NRT-6130', state: 'FL',
         seats: 5, dailyRate: 125, weeklyRate: 750, odometer: 54002, status: 'available', notes: '' },
       { id: 'v_altima', year: 2023, make: 'Nissan', model: 'Altima SV', trim: 'Sedan', klass: 'standard',
-        color: 'Gun Metallic', vin: '1N4BL4DV0PN331076', plate: 'LRT-9048', state: 'NY',
+        color: 'Gun Metallic', vin: '1N4BL4DV0PN331076', plate: 'NRT-9048', state: 'FL',
         seats: 5, dailyRate: 75, weeklyRate: 400, odometer: 29187, status: 'available', notes: '' },
       { id: 'v_odyssey', year: 2019, make: 'Honda', model: 'Odyssey EX-L', trim: 'Minivan', klass: 'van',
-        color: 'Modern Steel', vin: '5FNRL6H79KB015529', plate: 'LRT-3376', state: 'NY',
+        color: 'Modern Steel', vin: '5FNRL6H79KB015529', plate: 'NRT-3376', state: 'FL',
         seats: 8, dailyRate: 100, weeklyRate: 600, odometer: 102310, status: 'maintenance',
         notes: 'In the shop — rear brakes. Back Thursday.' }
     ];
@@ -60,45 +69,45 @@
     var out = [];
 
     out.push(withTotals({
-      id: 'c_sample1', no: 'LRT-2026-0141', sample: true, status: 'active',
+      id: 'c_sample1', no: 'NRT-2026-0141', sample: true, status: 'active',
       vehicleId: 'v_bmw330',
       renter: { name: 'Marcus A. Whitfield', dob: '1989-03-14', license: 'W412-8873-2201-90',
-        licState: 'NY', licExp: '2029-03-14', phone: '(718) 555-0142',
-        email: 'm.whitfield@example.com', address: '1140 Ralph Ave, Apt 3B, Brooklyn, NY 11236' },
+        licState: 'FL', licExp: '2029-03-14', phone: '(305) 555-0142',
+        email: 'm.whitfield@example.com', address: '1240 NW 119th St, Apt 3B, Miami, FL 33167' },
       startDate: back(9), endDate: fwd(5), rateMode: 'weekly', dailyRate: 100, weeklyRate: 550,
       insurance: { type: 'company', dailyFee: 15 },
       pickup: { fuel: 1, odometer: 48210, damage: [], date: back(9) },
       dropoff: null, deposit: 150, tolls: [], fees: [],
-      acks: SEED_ACKS, signature: sampleSignature(0.7), signedAt: back(9), agent: 'Neville Leville'
+      acks: SEED_ACKS, signature: sampleSignature(0.7), signedAt: back(9), agent: 'Neville'
     }));
 
     out.push(withTotals({
-      id: 'c_sample2', no: 'LRT-2026-0143', sample: true, status: 'active',
+      id: 'c_sample2', no: 'NRT-2026-0143', sample: true, status: 'active',
       vehicleId: 'v_tahoe',
       renter: { name: 'Danielle R. Okonkwo', dob: '1994-11-02', license: 'O882-1140-7765-22',
-        licState: 'NJ', licExp: '2028-11-02', phone: '(201) 555-0199',
-        email: 'd.okonkwo@example.com', address: '58 Bergenline Ave, Union City, NJ 07087' },
+        licState: 'FL', licExp: '2028-11-02', phone: '(786) 555-0199',
+        email: 'd.okonkwo@example.com', address: '8455 NE 2nd Ave, Miami, FL 33138' },
       startDate: back(2), endDate: fwd(1), rateMode: 'daily', dailyRate: 150, weeklyRate: 850,
       insurance: { type: 'self', dailyFee: 0, provider: 'GEICO', policyNo: '4471-882-119',
         policyFileName: 'okonkwo-policy-declarations.pdf', verified: true },
       pickup: { fuel: 0.75, odometer: 61455, damage: [], date: back(2) },
       dropoff: null, deposit: 150, tolls: [], fees: [],
-      acks: SEED_ACKS, signature: sampleSignature(2.4), signedAt: back(2), agent: 'Neville Leville'
+      acks: SEED_ACKS, signature: sampleSignature(2.4), signedAt: back(2), agent: 'Neville'
     }));
 
     var past = [
-      { id: 'c_s3', no: 'LRT-2026-0128', v: 'v_camry', name: 'Priya S. Raman', start: 110, len: 14,
+      { id: 'c_s3', no: 'NRT-2026-0128', v: 'v_camry', name: 'Priya S. Raman', start: 110, len: 14,
         mode: 'weekly', d: 75, w: 400, ins: 'company',
-        tolls: [{ label: 'Verrazzano E-ZPass', amount: 13.1 }, { label: 'RFK Bridge', amount: 6.94 }] },
-      { id: 'c_s4', no: 'LRT-2026-0132', v: 'v_grandch', name: 'Elias T. Moreau', start: 78, len: 21,
+        tolls: [{ label: 'SunPass \u2014 Dolphin Expwy', amount: 13.1 }, { label: 'Rickenbacker Causeway', amount: 6.94 }] },
+      { id: 'c_s4', no: 'NRT-2026-0132', v: 'v_grandch', name: 'Elias T. Moreau', start: 78, len: 21,
         mode: 'weekly', d: 125, w: 750, ins: 'company',
-        tolls: [{ label: 'NJ Turnpike', amount: 41.25 }] },
-      { id: 'c_s5', no: 'LRT-2026-0135', v: 'v_altima', name: 'Sasha Benoit', start: 47, len: 5,
+        tolls: [{ label: 'Florida\u2019s Turnpike', amount: 41.25 }] },
+      { id: 'c_s5', no: 'NRT-2026-0135', v: 'v_altima', name: 'Sasha Benoit', start: 47, len: 5,
         mode: 'daily', d: 75, w: 400, ins: 'self', tolls: [] },
-      { id: 'c_s6', no: 'LRT-2026-0138', v: 'v_odyssey', name: 'Carlton J. Reyes', start: 24, len: 10,
+      { id: 'c_s6', no: 'NRT-2026-0138', v: 'v_odyssey', name: 'Carlton J. Reyes', start: 24, len: 10,
         mode: 'weekly', d: 100, w: 600, ins: 'company',
-        tolls: [{ label: 'Holland Tunnel', amount: 17.63 }] },
-      { id: 'c_s7', no: 'LRT-2026-0140', v: 'v_camry', name: 'Imani Grant', start: 12, len: 7,
+        tolls: [{ label: 'Airport Expwy toll-by-plate', amount: 17.63 }] },
+      { id: 'c_s7', no: 'NRT-2026-0140', v: 'v_camry', name: 'Imani Grant', start: 12, len: 7,
         mode: 'weekly', d: 75, w: 400, ins: 'company', tolls: [] }
     ];
 
@@ -107,8 +116,8 @@
       var end = U.addDays(start, p.len);
       out.push(withTotals({
         id: p.id, no: p.no, sample: true, status: 'completed', vehicleId: p.v,
-        renter: { name: p.name, dob: '1990-06-01', license: 'ON FILE', licState: 'NY',
-          licExp: '2030-06-01', phone: '(718) 555-0100', email: '', address: 'On file' },
+        renter: { name: p.name, dob: '1990-06-01', license: 'ON FILE', licState: 'FL',
+          licExp: '2030-06-01', phone: '(305) 555-0100', email: '', address: 'On file' },
         startDate: start, endDate: end, rateMode: p.mode, dailyRate: p.d, weeklyRate: p.w,
         insurance: p.ins === 'company'
           ? { type: 'company', dailyFee: 15 }
@@ -116,7 +125,7 @@
         pickup: { fuel: 1, odometer: 0, damage: [], date: start },
         dropoff: { fuel: 1, odometer: 0, damage: [], date: end },
         deposit: 150, tolls: p.tolls, fees: [],
-        acks: SEED_ACKS, signature: sampleSignature(p.len * 0.37), signedAt: start, agent: 'Neville Leville', closedAt: end
+        acks: SEED_ACKS, signature: sampleSignature(p.len * 0.37), signedAt: start, agent: 'Neville', closedAt: end
       }));
     });
 
@@ -158,12 +167,12 @@
 
   S.defaultCompany = function () {
     return {
-      name: 'Leville Rentals & Transportation',
+      name: 'Neville Rentals & Transportation',
       tagline: 'Vehicle rental and transportation services',
-      address: '3819 Foster Avenue, Brooklyn, NY 11203',
-      phone: '(718) 555-0170',
-      email: 'rentals@levillerentals.com',
-      agent: 'Neville Leville',
+      address: '775 NW 144 St, Miami, FL 33168',
+      phone: '(305) 555-0170',
+      email: 'rentals@nevillerentals.com',
+      agent: 'Neville',
       deposit: 150,
       insuranceDaily: 15,
       minimumAge: 21,
@@ -218,14 +227,14 @@
     return db.contracts.filter(function (c) { return c.id === id; })[0] || null;
   };
   S.nextContractNo = function () {
-    return 'LRT-' + new Date().getFullYear() + '-' + ('000' + (db.seq + 1)).slice(-4);
+    return 'NRT-' + new Date().getFullYear() + '-' + ('000' + (db.seq + 1)).slice(-4);
   };
   S.saveContract = function (c) {
     c.totals = S.totals(c);
     if (!c.id) {
       c.id = U.uid('c');
       db.seq += 1;
-      c.no = 'LRT-' + new Date().getFullYear() + '-' + ('000' + db.seq).slice(-4);
+      c.no = 'NRT-' + new Date().getFullYear() + '-' + ('000' + db.seq).slice(-4);
       db.contracts.push(c);
     } else {
       var i = db.contracts.findIndex(function (x) { return x.id === c.id; });
@@ -333,7 +342,7 @@
   S.exportJSON = function () { return JSON.stringify(db, null, 2); };
   S.importJSON = function (text) {
     var parsed = JSON.parse(text);
-    if (!parsed.vehicles || !parsed.contracts) throw new Error('That file is not a Leville backup.');
+    if (!parsed.vehicles || !parsed.contracts) throw new Error('That file is not a Neville backup.');
     db = parsed;
     if (!db.company) db.company = S.defaultCompany();
     S.syncVehicleStatus();
@@ -352,5 +361,5 @@
     return S.init();
   };
 
-  root.LRT.store = S;
+  root.NRT.store = S;
 })(window);

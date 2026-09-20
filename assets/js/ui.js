@@ -1,8 +1,8 @@
-/* Leville Rentals & Transportation — icons, modals, small shared widgets. */
+/* Neville Rentals & Transportation — icons, modals, small shared widgets. */
 (function (root) {
   'use strict';
 
-  var U = root.LRT.util;
+  var U = root.NRT.util;
   var UI = {};
 
   /* ------------------------------------------------------------- icon set */
@@ -298,5 +298,5 @@
     return wrap;
   };
 
-  root.LRT.ui = UI;
+  root.NRT.ui = UI;
 })(window);

@@ -1,4 +1,4 @@
-# Leville Rentals & Transportation
+# Neville Rentals & Transportation
 
 A rental-counter application and digital contract generator. It runs entirely in
 the browser — no build step, no server, no dependencies to install. Open
@@ -145,7 +145,7 @@ rentals.
 
 ## Data
 
-Everything is stored in this browser's `localStorage` under `lrt.db.v2`. It does
+Everything is stored in this browser's `localStorage` under `nrt.db.v2`. It does
 not sync between devices — a contract written on the phone stays on the phone.
 
 **Settings → Data** has *Export backup* (a JSON file) and *Import backup* to move
@@ -158,7 +158,7 @@ dashboard opens on a working business. They are all flagged `sample: true`.
 
 `assets/js/store.js` is the only module that touches storage. Replace its
 private `read()` and `write()` with calls to a server and nothing else in the
-app changes — every other module goes through the `LRT.store` API.
+app changes — every other module goes through the `NRT.store` API.
 
 ---
 
